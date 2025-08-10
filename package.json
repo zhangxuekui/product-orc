@@ -17,17 +17,24 @@
     "@opennextjs/cloudflare": "1.3.0",
     "next": "15.3.3",
     "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react-dom": "19.0.0",
+    "tencentcloud-sdk-nodejs-ocr": "^4.1.94"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3",
     "@tailwindcss/postcss": "4.1.4",
+    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/react": "^16.3.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "24.0.4",
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",
     "eslint": "9.27.0",
     "eslint-config-next": "15.3.3",
+    "jest": "^30.0.5",
+    "supertest": "^7.1.4",
     "tailwindcss": "4.1.1",
+    "ts-jest": "^29.4.1",
     "typescript": "5.8.3",
     "wrangler": "4.21.x"
   },
@@ -40,6 +47,9 @@
     "dev": "next dev",
     "lint": "next lint",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "start": "next start"
+    "start": "next start",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   }
 }
