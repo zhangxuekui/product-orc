@@ -20,6 +20,6 @@ export async function POST(request: Request) {
     // 这里可以添加数据验证和存储逻辑
     return NextResponse.json({ success: true, data }, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid data'+error }, { status: 400 });
   }
 }
