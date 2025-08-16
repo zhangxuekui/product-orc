@@ -40,10 +40,11 @@ const users = [
 async function GETHandler(request: NextRequest) {
     try {
       // 转换图片为base64
-      const imageBase64 = await imageToBase64('public/images/unnamed.jpg');
-      console.log(imageBase64);
+      // const imageBase64 = await imageToBase64('public/images/unnamed.jpg');
+      // console.log(imageBase64);
       const params = {
-          ImageBase64: imageBase64,
+          // ImageBase64: imageBase64,
+          ImageUrl: "https://pic.kuiman.com/unnamed.jpg",
           ItemNames: ["配料信息"],
       };
       

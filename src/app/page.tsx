@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Input } from "@/components/ui/input"
 
 export default function Home() {
   return (
@@ -22,6 +23,12 @@ export default function Home() {
           </li>
           <li className="tracking-[-.01em]">
             Save and see your changes instantly.
+          </li>
+          <li>
+            <form action="/api/upload" method="POST" encType="multipart/form-data">
+              <Input type="file" name="file" className="w-50" />
+              <button type="submit"  className="bg-[#0070f3] text-white px-4 py-2 rounded-md mt-2">上传</button>
+            </form>
           </li>
         </ol>
 
