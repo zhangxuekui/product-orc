@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withAuth } from '../middleware/auth';
 import { withRateLimit } from '../middleware/rateLimit';
 import bcrypt from 'bcrypt';
-declare module 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import { RegisterRequest, UserResponse, ErrorResponse } from '@/app/types/user';
 
