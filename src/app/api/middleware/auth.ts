@@ -42,12 +42,12 @@ export function withAuth(handler: (request: NextRequest) => Promise<NextResponse
   return async (request: NextRequest): Promise<NextResponse> => {
     const authResult = await authMiddleware(request);
     
-    // if (!authResult.isAuthenticated) {
-    //   return NextResponse.json(
-    //     { error: authResult.error || 'Unauthorized' },
-    //     { status: 401 }
-    //   );
-    // }
+    if (!authResult.isAuthenticated) {
+      return NextResponse.json(
+        { error: authResult.error || 'Unauthorized' },
+        { status: 401 }
+      );
+    }
     
     return handler(request);
   };

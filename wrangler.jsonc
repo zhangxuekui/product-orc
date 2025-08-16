@@ -20,5 +20,12 @@
       "binding": "R2_BUCKET",
       "bucket_name": "product"
     }
+  ],  
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "product-health",
+      "database_id": "4316102b-24da-462e-9fd8-e2f48b01e319"
+    }
   ]
 }
