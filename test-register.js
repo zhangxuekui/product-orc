@@ -1,4 +1,6 @@
 // test-register.js
+// 这个脚本用于测试使用D1数据库的用户注册接口
+
 const { default: request } = require('supertest');
 const { createServer } = require('node:http');
 const { NextResponse } = require('next/server');
@@ -34,7 +36,7 @@ const server = createServer((req, res) => {
 
 // 测试函数
 async function runTests() {
-  console.log('开始测试用户注册接口...');
+  console.log('开始测试用户注册接口(D1数据库)...');
 
   // 测试1: 正常注册
   try {
@@ -103,9 +105,36 @@ async function runTests() {
     console.log('✗ 测试3失败:', error.message);
   }
 
-  // 测试4: 测试防刷功能
+  // 测试4: 邮箱已存在
   try {
-    console.log('测试4: 防刷功能测试 - 连续发送6个请求');
+    const testUser = {
+      username: 'testuser' + Math.floor(Math.random() * 10000),
+      email: 'testunique@example.com',
+      password: 'Test1234',
+      confirmPassword: 'Test1234'
+    };
+
+    console.log('测试4: 邮箱已存在');
+    // 先注册一个用户
+    await request(server).post('/api/users').send(testUser);
+    // 尝试使用相同邮箱注册
+    const response = await request(server)
+      .post('/api/users')
+      .send({
+        ...testUser,
+        username: 'anotheruser' + Math.floor(Math.random() * 10000)
+      })
+      .expect('Content-Type', /json/)
+      .expect(409);
+
+    console.log('✓ 测试4通过: 正确返回错误', response.body.error);
+  } catch (error) {
+    console.log('✗ 测试4失败:', error.message);
+  }
+
+  // 测试5: 测试防刷功能
+  try {
+    console.log('测试5: 防刷功能测试 - 连续发送6个请求');
     const testUser = {
       username: 'testuser' + Math.floor(Math.random() * 10000),
       email: 'test' + Math.floor(Math.random() * 10000) + '@example.com',
@@ -127,12 +156,12 @@ async function runTests() {
       .send(testUser);
 
     if (response.status === 429) {
-      console.log('✓ 测试4通过: 第6个请求被正确限流', response.body.error);
+      console.log('✓ 测试5通过: 第6个请求被正确限流', response.body.error);
     } else {
-      console.log('✗ 测试4失败: 第6个请求未被限流，状态码', response.status);
+      console.log('✗ 测试5失败: 第6个请求未被限流，状态码', response.status);
     }
   } catch (error) {
-    console.log('✗ 测试4失败:', error.message);
+    console.log('✗ 测试5失败:', error.message);
   }
 
   // 关闭服务器
@@ -144,5 +173,6 @@ async function runTests() {
 // 运行测试
 runTests();
 
-// 注意：由于Next.js的路由处理方式，这个测试脚本可能需要调整才能直接运行
-// 实际项目中，建议使用Jest等测试框架结合适当的Next.js测试工具进行测试
+// 注意：由于Next.js和D1数据库的特性，这个测试脚本可能需要在Cloudflare Workers环境中运行，
+// 或者使用Wrangler CLI执行: wrangler script run test-register.js
+// 实际项目中，建议使用Jest等测试框架结合适当的Next.js和Cloudflare测试工具进行测试

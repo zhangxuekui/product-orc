@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { withAuth } from '../middleware/auth';
+import { withJwtAuth } from '../middleware/jwtAuth';
 import imageToBase64 from '../../imageToBase64';
 
 
@@ -60,4 +60,4 @@ async function GETHandler(request: NextRequest) {
     }
 }
 
-export const GET = withAuth(GETHandler);
+export const GET = withJwtAuth(GETHandler);

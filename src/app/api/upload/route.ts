@@ -1,21 +1,12 @@
 import {
   S3Client,
-  ListBucketsCommand,
-  ListObjectsV2Command,
-  GetObjectCommand,
   PutObjectCommand,
 } from "@aws-sdk/client-s3";
 import { NextRequest, NextResponse } from 'next/server';
 
-const S3 = new S3Client({
-  region: "auto",
-  endpoint: `https://650088cae0176c19567aae3f7c06fa77.r2.cloudflarestorage.com`,
-  credentials: {
-    accessKeyId: '350c561137ffdc965cfb9583256049a2',
-    secretAccessKey: '20198bbafc6ad53b936bb838239a141d02f369aa2ace8234e7f5f05f2abca02f'
-}});
 
-console.log(await S3.send(new ListBucketsCommand({})));
+
+// console.log(await S3.send(new ListBucketsCommand({})));
 // {
 //     '$metadata': {
 //     httpStatusCode: 200,
@@ -35,9 +26,9 @@ console.log(await S3.send(new ListBucketsCommand({})));
 //     }
 // }
 
-console.log(
-  await S3.send(new ListObjectsV2Command({ Bucket: "metfo" })),
-);
+// console.log(
+//   await S3.send(new ListObjectsV2Command({ Bucket: "metfo" })),
+// );
 // {
 //     '$metadata': {
 //       httpStatusCode: 200,
@@ -81,16 +72,24 @@ console.log(
 //   }
 
 
-console.log(await S3.send(new PutObjectCommand({
-  Bucket: 'product',
-  Key: 'test.txt',
-  Body: 'Hello, world!',
-})));
+// console.log(await S3.send(new PutObjectCommand({
+//   Bucket: 'product',
+//   Key: 'test.txt',
+//   Body: 'Hello, world!',
+// })));
 // 导入uuid库
 import { v4 as uuidv4 } from 'uuid';
+import { withJwtAuth } from '../middleware/jwtAuth';
 
+const S3 = new S3Client({
+  region: "auto",
+  endpoint: `https://650088cae0176c19567aae3f7c06fa77.r2.cloudflarestorage.com`,
+  credentials: {
+    accessKeyId: '350c561137ffdc965cfb9583256049a2',
+    secretAccessKey: '20198bbafc6ad53b936bb838239a141d02f369aa2ace8234e7f5f05f2abca02f'
+}});
 //接受前端的文件并上传到product桶
-export async function POST(req: Request) {
+async function uploadHandler(req: NextRequest) {
   const formData = await req.formData();
   const file = formData.get('file');
   if (file instanceof File) {
@@ -108,7 +107,7 @@ export async function POST(req: Request) {
     }));
 
     // 构建文件URL（假设使用S3公开访问URL或CloudFront分配）
-    const fileUrl = `https://product.s3.amazonaws.com/${uniqueFileName}`;
+    const fileUrl = `https://info.kuiman.com/${uniqueFileName}`;
 
     return NextResponse.json({
       success: true,
@@ -119,4 +118,18 @@ export async function POST(req: Request) {
       fileSize: file.size
     });
   }
+  return NextResponse.json({
+    success: false,
+    message: 'No file provided'
+  }, { status: 400 });
 }
+
+// 使用JWT认证中间件保护上传接口
+export const POST = withJwtAuth(uploadHandler);
+
+// 导出一个空的GET处理函数以避免路由错误
+// 实际应用中可以删除或实现文件列表等功能
+// export async function GET() {
+//   return NextResponse.json({ message: 'Method not allowed' }, { status: 405 });
+// }
+// 以下是已删除的重复代码
